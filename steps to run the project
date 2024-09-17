@@ -1,0 +1,50 @@
+To run this project, the following software tools and platforms are required:
+
+### 1. **Arduino IDE**
+   - **Purpose**: The primary development environment for writing and uploading the code to the ESP32 microcontroller.
+   - **Installation**: 
+     - Download from [Arduino's official website](https://www.arduino.cc/en/software).
+     - Install the **ESP32 Board Package** via the Boards Manager in Arduino IDE.
+     - Add necessary libraries such as `Blynk`, `DHT`, `SFE_BMP180`, and `Adafruit_SSD1306`.
+   - **Key Steps**:
+     - Install ESP32 support: Go to **File > Preferences**, then add the following URL to the Additional Board Manager URLs: 
+       ```
+       https://dl.espressif.com/dl/package_esp32_index.json
+       ```
+       After that, go to **Tools > Board > Boards Manager** and search for "ESP32" to install the board package.
+
+### 2. **Blynk IoT Platform**
+   - **Purpose**: A cloud platform used for displaying the sensor data on a mobile or web dashboard.
+   - **Installation**:
+     - Sign up for Blynk via their website at [Blynk.io](https://blynk.io/) or through the **Blynk App** on Android or iOS.
+     - Create a new project and add widgets like value displays for temperature, humidity, pressure, etc.
+   - **Setup**:
+     - Copy the **Blynk Auth Token** from the Blynk dashboard and paste it into your code.
+     - Add necessary virtual pins (`V0`, `V1`, `V2`, etc.) to display the sensor readings on the dashboard.
+
+### 3. **ESP32 Drivers**
+   - **Purpose**: To enable communication between the ESP32 and your computer.
+   - **Installation**:
+     - Install the **CP210x USB to UART Bridge VCP Drivers** from the Silicon Labs website if necessary, to allow the ESP32 to be detected by your computer.
+
+### 4. **Libraries** (installed via Arduino IDE):
+   - **Blynk Library**:
+     - Allows the ESP32 to connect to the Blynk cloud and send sensor data.
+     - Can be installed in Arduino IDE by navigating to **Sketch > Include Library > Manage Libraries**, then searching for "Blynk".
+   - **DHT Library**:
+     - For reading temperature and humidity from the DHT11 sensor.
+     - Installed similarly through the Arduino Library Manager by searching for "DHT".
+   - **SFE_BMP180 Library**:
+     - For reading pressure and temperature data from the BMP180 sensor.
+     - Can be installed through the Library Manager.
+   - **Adafruit_SSD1306 Library** (optional, for OLED display if used):
+     - For controlling an OLED display (if the project includes a screen to show data locally).
+     - Installed via the Arduino Library Manager by searching for "Adafruit SSD1306".
+
+### 5. **Serial Monitor/Plotter** (optional)
+   - **Purpose**: Part of the Arduino IDE, used to debug and view sensor data directly from the ESP32 during development.
+
+#### Optional Software:
+- **Blynk App**: Download the mobile app from the [Google Play Store](https://play.google.com/store/apps/details?id=cc.blynk) or [Apple App Store](https://apps.apple.com/us/app/blynk-iot/id1559317868) to monitor sensor readings on your smartphone.
+
+With these tools, you can successfully code, upload, and run the weather monitoring station on the ESP32, sending real-time data to the Blynk IoT platform.
