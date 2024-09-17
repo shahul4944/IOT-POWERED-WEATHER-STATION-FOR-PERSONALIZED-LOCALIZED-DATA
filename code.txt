@@ -1,0 +1,88 @@
+#define BLYNK_TEMPLATE_ID "blink template id"
+#define BLYNK_TEMPLATE_NAME "blink template name"
+#define BLYNK_AUTH_TOKEN "your blink auth token"
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+#include <DHT.h>
+#include <SFE_BMP180.h>
+#include <Adafruit_SSD1306.h>
+
+#define LDR 4
+#define TH 5
+#define Rain 36
+
+DHT dht(TH, DHT11);
+SFE_BMP180 bmp;
+char auth[] = "your auth token";
+char ssid[] = "ssid";
+char pass[] = "password";
+
+
+void setup() {
+  Serial.begin(115200);
+  Blynk.begin(auth, ssid, pass);
+  dht.begin();
+  bmp.begin();
+  pinMode(LDR, INPUT);
+  pinMode(Rain, INPUT);
+}
+
+void DHT11sensor() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  if (!isnan(h) && !isnan(t)) {
+    Blynk.virtualWrite(V0, t);
+    Blynk.virtualWrite(V1, h);
+  } else {
+    Serial.println("Failed to read from DHT sensor!");
+  }
+}
+
+void rainSensor() {
+  int Rvalue = analogRead(Rain);
+  Rvalue = map(Rvalue, 0, 4095, 0, 100);
+  Rvalue = constrain(Rvalue, 0, 100);
+  Blynk.virtualWrite(V2, Rvalue);
+}
+
+void pressure() {
+  char status;
+  double T, P;
+  status = bmp.startTemperature();
+  if (status != 0) {
+    delay(status);
+    status = bmp.getTemperature(T);
+    status = bmp.startPressure(3);
+    if (status != 0) {
+      delay(status);
+      status = bmp.getPressure(P, T);
+      if (status != 0) {
+        Blynk.virtualWrite(V3, P);
+      } else {
+        Serial.println("Error getting pressure");
+      }
+    } else {
+      Serial.println("Error starting pressure measurement");
+    }
+  } else {
+    Serial.println("Error starting temperature measurement");
+  }
+}
+
+void LDRsensor() {
+  bool value = digitalRead(LDR);
+  if (value == HIGH) {
+    Blynk.virtualWrite(V4, 255); // LDR value high, indicating bright
+  } else {
+    Blynk.virtualWrite(V4, 0);   // LDR value low, indicating dark
+  }
+}
+
+void loop() {
+  Blynk.run();
+  DHT11sensor();
+  rainSensor();
+  pressure();
+  LDRsensor();
+  delay(1000);
+}
